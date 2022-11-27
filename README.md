@@ -1,4 +1,4 @@
-/*
+
  
 Let's say we're running a small entertainment business as a start-up. This means we're selling tickets to live events on a website. An email campaign service is what we are going to make here. We're building a marketing engine that will send notifications (emails, text messages) directly to the client and we'll add more features as we go.
  
@@ -74,4 +74,4 @@ Please, instead of debuging with breakpoints, debug with "Console.Writeline();" 
              0  +----------------------+  
                 0          X          4000
         ---------------------------------------*/
-    */
+  

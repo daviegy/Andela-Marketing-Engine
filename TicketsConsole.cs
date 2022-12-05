@@ -55,7 +55,7 @@ namespace TicketsConsole
         public class MarketingEngine
         {
             private readonly List<Event> events;
-            private Dictionary<(string, string), int> cityDistance = new();
+            private Dictionary<string, int> cityDistance = new();
             public MarketingEngine(List<Event> events)
             {
                 this.events = events;
@@ -107,7 +107,7 @@ namespace TicketsConsole
                 {
                     int distance = RetrieveDistance(customer.City, evnt.City);
                     if (distance < 0)
-                        continue;
+                        continue; // we are unable to calculate distance
                     evnt.EventDistanceToCustomer = distance;
                     customerEvent.Add(evnt);
                 }
@@ -132,11 +132,10 @@ namespace TicketsConsole
             {
                 
                 int distance;
-
+                string key = BuildCityKey(custCity,eventCity);
                 // check if distance has been calculated before
-                if (cityDistance.ContainsKey((custCity, eventCity))
-                        || cityDistance.ContainsKey((eventCity, custCity)))
-                    return cityDistance[(custCity, eventCity)];
+                if (cityDistance.ContainsKey(key))
+                    return cityDistance[key];
                 try
                 {
                     // calculate distance
@@ -155,16 +154,17 @@ namespace TicketsConsole
                 
                   
                 // store distance for cities
-                if(custCity.Equals(eventCity))
-                    cityDistance.Add((custCity, eventCity), distance);
-                else
-                {
-                    cityDistance.Add((custCity, eventCity), distance);
-                    cityDistance.Add((eventCity, custCity), distance);
-                }               
+                
+               cityDistance.Add(key, distance);
+                     
                 return distance;
             }
-
+            public string BuildCityKey(string cityA, string cityB){
+                string mergeCity = string.Concat(cityA,cityB);
+                var mergeCityArr = mergeCity.ToCharArray();
+                Array.Sort(mergeCityArr);
+                return new string(mergeCityArr);
+            }
             public void EventBasedOnPrice(Customer customer, int topEvent = 5)
             {
                 var custEvent = this.events.OrderBy(x=>x.Price).Take(topEvent).ToList();
@@ -234,4 +234,3 @@ namespace TicketsConsole
 
     }
 }
-
